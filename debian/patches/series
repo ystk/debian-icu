@@ -1,7 +1,13 @@
+doxygen.patch
+icudata-stdlibs.patch
 gencfu-man.patch
 gennorm2-man.patch
 icuinfo-man.patch
-pkgdata-buffers.patch
-arm-assembler.patch
-doc-gif.patch
 malayalam-rendering.patch
+kfreebsd-configure.patch
+pathmax.patch
+CVE-2011-4599.patch
+indic-ccmp.patch
+mlym-crash.patch
+CVE-2013-0900.patch
+CVE-2013-2924.patch

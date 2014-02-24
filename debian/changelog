@@ -1,3 +1,132 @@
+icu (4.8.1.1-12+deb7u1) stable-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Fix cve-2013-2924: use-after-free issue in csrucode.cpp. 
+
+ -- Michael Gilbert <mgilbert@debian.org>  Sun, 27 Oct 2013 04:30:50 +0000
+
+icu (4.8.1.1-12) unstable; urgency=high
+
+  * Add patch to address CVE-2013-0900, a threading race condition.
+    (Closes: #702346)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Thu, 21 Mar 2013 11:29:08 -0400
+
+icu (4.8.1.1-11) unstable; urgency=medium
+
+  * Fix crash on rendering incremental Malayalam text input.  Thanks Colin
+    Watson. (Closes: #702982)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 16 Mar 2013 14:58:15 -0400
+
+icu (4.8.1.1-10) unstable; urgency=low
+
+  * Include pkg-config files in dev package.  Thanks Tommi Vainikainen.
+    (Closes: #687339)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 17 Nov 2012 14:37:40 -0500
+
+icu (4.8.1.1-9) unstable; urgency=low
+
+  * debian/rules: Use xz compression for binary packages.
+    (Closes: #683901)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 11 Aug 2012 12:41:28 -0400
+
+icu (4.8.1.1-8) unstable; urgency=low
+
+  * Switch hardening back to hardening-wrapper again since otherwise some
+    things sneak into icu-config's output.
+
+ -- Jay Berkenbilt <qjb@debian.org>  Tue, 05 Jun 2012 14:27:27 -0400
+
+icu (4.8.1.1-7) unstable; urgency=low
+
+  * Switch hardening back to dpkg-buildoptions.
+  * Fix doc install for newer doxygen.  (Closes: #674382)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Thu, 24 May 2012 13:55:13 -0400
+
+icu (4.8.1.1-6) unstable; urgency=low
+
+  * Remove 32-bit packages built on 64-bit architectures, and enable
+    Multiarch.  (Closes: #665416)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sun, 22 Apr 2012 08:40:16 -0400
+
+icu (4.8.1.1-5) unstable; urgency=low
+
+  * Enable security hardening flags.  Thanks to Simon Ruderich for doing
+    100% of the work, sending a clean patch, and providing clear
+    instructions on how to verify.  (Closes: #663601)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Fri, 23 Mar 2012 22:45:55 -0400
+
+icu (4.8.1.1-4) unstable; urgency=low
+
+  * Add patch to add CCMP support for Indic.  (Closes: #655101)
+  * Update standards version.
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sun, 11 Mar 2012 18:30:29 -0400
+
+icu (4.8.1.1-3) unstable; urgency=high
+
+  * Add patch to address CVE-2011-4599, a potential buffer overflow.
+    (Closes: #654883)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 21 Jan 2012 19:44:44 -0500
+
+icu (4.8.1.1-2) unstable; urgency=low
+
+  * debian/patches/icudata-stdlibs.patch: Link stdlibs to libicudata so we
+    get reasonably sane ELF headers on armhf.  Thanks Adam Conrad
+    <adconrad@ubuntu.com>.  (Closes: #653457)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 04 Jan 2012 09:52:11 -0500
+
+icu (4.8.1.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Add simple patch to define PATH_MAX when not defined.  Not an ideal
+    solution, but it will do for now.  (Closes: #643661)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 09 Nov 2011 09:59:08 -0500
+
+icu (4.8.1-2) experimental; urgency=low
+
+  * Fix 64-bit kfreebsd configure problem.  Thanks Petr Salinger.
+    (Closes: #630517)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 10 Sep 2011 08:17:58 -0400
+
+icu (4.8.1-1) experimental; urgency=low
+
+  * New upstream release
+  * Remove 32-bit source directory on clean.  (Closes: #630514)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 03 Sep 2011 10:14:57 -0400
+
+icu (4.8-1) experimental; urgency=low
+
+  * New upstream release
+  * Upstream release includes fix to RegexMatch crash (Closes: #606886)
+  * Updated standards to 3.9.2; no changes required
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 28 May 2011 11:30:22 -0400
+
+icu (4.4.2-2) unstable; urgency=low
+
+  * Apply patch to fix Malayam rendering.  (Closes: #591615)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Thu, 25 Nov 2010 12:51:18 -0500
+
+icu (4.4.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Updated standards version to 3.9.1; no changes required
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sun, 17 Oct 2010 11:06:20 -0400
+
 icu (4.4.1-7) testing-proposed-updates; urgency=high
 
   * Apply patch to fix Malayam rendering.  (Closes: #591615)
