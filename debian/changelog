@@ -1,9 +1,122 @@
-icu (4.8.1.1-12+deb7u1) stable-security; urgency=high
+icu (52.1-8) unstable; urgency=high
+
+  * New maintainer (closes: #777694).
+  * Update Standars-Version to 3.9.6 .
+
+  [ Michael Gilbert <mgilbert@debian.org> ]
+  * Apply a more complete fix for CVE-2014-7940 (closes: #780503).
+    - Thanks to Marc Deslauriers.
+
+ -- Laszlo Boszormenyi (GCS) <gcs@debian.org>  Tue, 17 Mar 2015 11:14:15 +0000
+
+icu (52.1-7.1) unstable; urgency=high
 
   * Non-maintainer upload by the Security Team.
-  * Fix cve-2013-2924: use-after-free issue in csrucode.cpp. 
+  * Unfixed issue from the previous upload (closes: #776264)
+    - CVE-2014-6585: out-of-bounds read.
+  * Issues fixed in chromium 40.0.2214.91 (closes: #776265, #776719).
+    - CVE-2014-7923: memory corruption in regular expression comparison.
+    - CVE-2014-7926: memory corruption in regular expression comparison.
+    - CVE-2014-7940: uninitialized memory in i18n/icol.cpp.
+    - CVE-2014-9654: more regular expression handling issues.
 
- -- Michael Gilbert <mgilbert@debian.org>  Sun, 27 Oct 2013 04:30:50 +0000
+ -- Michael Gilbert <mgilbert@debian.org>  Sun, 15 Feb 2015 22:19:14 +0000
+
+icu (52.1-7) unstable; urgency=high
+
+  * Patch to CVE-2014-6591, CVE-2014-6585 a font parsing bug.
+    (Closes: #775884)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 21 Jan 2015 21:33:19 -0500
+
+icu (52.1-6) unstable; urgency=medium
+
+  * Ensure that only flags intended to be set by users make it into
+    icu-config. Previously hardening flags were sneaking in there.
+    (Closes: #759792)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Mon, 29 Sep 2014 09:59:09 -0400
+
+icu (52.1-5) unstable; urgency=medium
+
+  * Switch hardening back to dpkg-buildflags. It wasn't previously working
+    but now is, probably because of other bugfixes that have happened in
+    the mean time.
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 26 Jul 2014 12:54:32 -0400
+
+icu (52.1-4) unstable; urgency=medium
+
+  * Fix test case that fails with gcc 4.9. Fix is from upstream. (Closes:
+    #746860)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 21 Jun 2014 16:52:47 -0400
+
+icu (52.1-3) unstable; urgency=medium
+
+  * Add package dependency information to assist with upgrades in Ubuntu.
+    This eliminates the need for a delta on the Ubuntu version of the
+    package.
+
+ -- Jay Berkenbilt <qjb@debian.org>  Tue, 24 Dec 2013 11:45:03 -0500
+
+icu (52.1-2) unstable; urgency=low
+
+  * Re-upload to unstable
+
+ -- Jay Berkenbilt <qjb@debian.org>  Tue, 03 Dec 2013 16:05:40 -0500
+
+icu (52.1-1) experimental; urgency=low
+
+  * New upstream release
+  * Standards version 3.9.5 (no changes required)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 13 Nov 2013 16:20:40 -0500
+
+icu (52~m1-2) experimental; urgency=low
+
+  * Updated year in copyright file
+  * Standards version 3.9.4 (no changes required)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sun, 15 Sep 2013 09:02:30 -0400
+
+icu (52~m1-1) experimental; urgency=low
+
+  * New upstream release
+  * Fixed debian/watch file based on new version numbering
+  * Various bugs have been fixed upstream.  (Closes: #712501, #690156)
+  * Avoid packaging debugging library for libicudata since it has no
+    debugging symbols in it.  (Closes: #698696)
+  * Clarify some ambiguous language in the copyright file, and address the
+    issue of derived data from an IETF RFC that does not actually appear
+    in the sources.  (Closes: #721590)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sat, 14 Sep 2013 20:52:27 -0400
+
+icu (4.8.1.1-14) unstable; urgency=high
+
+  * Acknowledge NMU.  Thanks.
+  * Update standards version to 3.9.5.  No changes required.
+  * No changes other than version numbers; uploading with urgency=high.
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 13 Nov 2013 16:19:32 -0500
+
+icu (4.8.1.1-13+nmu1) unstable; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Fix CVE-2013-2924: use-after-free issue in csrucode.cpp (closes: #726477).
+
+ -- Michael Gilbert <mgilbert@debian.org>  Sun, 27 Oct 2013 03:49:58 +0000
+
+icu (4.8.1.1-13) unstable; urgency=low
+
+  * Multi-arch libicu-dev.  Thanks Dmitrijs Ledkovs
+    <dmitrij.ledkov@ubuntu.com>!  (Closes: #699763)
+  * Mark doxygen as architecture-independent build dependency.
+    (Closes: #706795)
+  * Depend on autotools-dev to update config.guess
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 21 Aug 2013 20:01:15 -0400
 
 icu (4.8.1.1-12) unstable; urgency=high
 
