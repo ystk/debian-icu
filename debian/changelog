@@ -1,3 +1,17 @@
+icu (4.4.1-8+squeeze3) squeeze-lts; urgency=medium
+
+  * Non-maintainer upload by the Squeeze LTS team.
+  * Backports from wheezy:
+  * CVE-2013-1569, CVE-2013-2383, CVE-2013-2384, and CVE-2013-2419
+  * CVE-2014-6585: out-of-bounds read.
+  * CVE-2014-6591: more out-of-bounds reads.
+  * CVE-2014-7923: memory corruption in regular expression comparison.
+  * CVE-2014-7926: memory corruption in regular expression comparison.
+  * CVE-2014-7940: uninitialized memory in i18n/icol.cpp.
+  * CVE-2014-9654: more regular expression handling issues.
+
+ -- Santiago Ruano Rincón <santiagorr@riseup.net>  Sat, 09 May 2015 10:21:30 +0200
+
 icu (4.4.1-8+squeeze2) oldstable-security; urgency=high
 
   * Non-maintainer upload by the Security Team.
