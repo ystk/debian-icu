@@ -1,3 +1,13 @@
+icu (4.4.1-8+squeeze4) squeeze-lts; urgency=medium
+
+  * Non-maintainer upload by the Squeeze LTS team.
+  * CVE-2015-4760: Fix boundary checks in layout engine. Backport patch from
+    unstable.
+  * Backport two-digit-year-test.patch from wheezy to fix the intltest test
+    suite.
+
+ -- Santiago Ruano Rincón <santiagorr@riseup.net>  Mon, 27 Jul 2015 17:03:08 +0200
+
 icu (4.4.1-8+squeeze3) squeeze-lts; urgency=medium
 
   * Non-maintainer upload by the Squeeze LTS team.
