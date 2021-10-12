@@ -1,3 +1,11 @@
+icu (52.1-8+deb8u9) jessie-security; urgency=high
+
+  * Non-maintainer upload by the LTS team.
+  * CVE-2020-21913: Prevent a potential use-after-free vulnerability in
+    the pkg_createWithAssemblyCode function.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 12 Oct 2021 11:42:26 +0100
+
 icu (52.1-8+deb8u8) jessie-security; urgency=medium
 
   * Non-maintainer upload by the LTS team.
