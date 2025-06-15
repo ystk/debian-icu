@@ -1,0 +1,171 @@
+From a8998ae3f0c5f5221c01f836b6deb0b1b0914c6e Mon Sep 17 00:00:00 2001
+From: Frank Tang <ftang@chromium.org>
+Date: Wed, 22 Jan 2025 11:50:59 -0800
+Subject: ICU-22973 Fix buffer overflow by using CharString
+
+---
+ source/tools/genrb/parse.cpp | 50 +++++++++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 20 deletions(-)
+
+diff --git a/source/tools/genrb/parse.cpp b/source/tools/genrb/parse.cpp
+index ab7bcca23d4..4882ccb237f 100644
+--- a/source/tools/genrb/parse.cpp
++++ b/source/tools/genrb/parse.cpp
+@@ -33,6 +33,7 @@
+ #include "unicode/ustring.h"
+ #include "unicode/uscript.h"
+ #include "unicode/putil.h"
++#include "charstr.h"
+ #include <stdio.h>
+ 
+ /* Number of tokens to read ahead of the current stream position */
+@@ -831,7 +832,7 @@ addCollation(ParseState* state, struct SResource  *result, uint32_t startline, U
+     struct UString    *tokenValue;
+     struct UString     comment;
+     enum   ETokenType  token;
+-    char               subtag[1024];
++    CharString         subtag;
+     UVersionInfo       version;
+     uint32_t           line;
+     GenrbData genrbdata;
+@@ -865,15 +866,15 @@ addCollation(ParseState* state, struct SResource  *result, uint32_t startline, U
+             return NULL;
+         }
+ 
+-        u_UCharsToChars(tokenValue->fChars, subtag, u_strlen(tokenValue->fChars) + 1);
+-
++        subtag.clear();
++        subtag.appendInvariantChars(tokenValue->fChars, u_strlen(tokenValue->fChars), *status);
+         if (U_FAILURE(*status))
+         {
+             res_close(result);
+             return NULL;
+         }
+ 
+-        member = parseResource(state, subtag, NULL, status);
++        member = parseResource(state, subtag.data(), NULL, status);
+ 
+         if (U_FAILURE(*status))
+         {
+@@ -881,7 +882,7 @@ addCollation(ParseState* state, struct SResource  *result, uint32_t startline, U
+             return NULL;
+         }
+ 
+-        if (uprv_strcmp(subtag, "Version") == 0)
++        if (uprv_strcmp(subtag.data(), "Version") == 0)
+         {
+             char     ver[40];
+             int32_t length = member->u.fString.fLength;
+@@ -897,17 +898,17 @@ addCollation(ParseState* state, struct SResource  *result, uint32_t startline, U
+             table_add(result, member, line, status);
+ 
+         }
+-        else if (uprv_strcmp(subtag, "Override") == 0)
++        else if (uprv_strcmp(subtag.data(), "Override") == 0)
+         {
+             // UBool override = (u_strncmp(member->u.fString.fChars, trueValue, u_strlen(trueValue)) == 0);
+             table_add(result, member, line, status);
+ 
+         }
+-        else if(uprv_strcmp(subtag, "%%CollationBin")==0)
++        else if(uprv_strcmp(subtag.data(), "%%CollationBin")==0)
+         {
+             /* discard duplicate %%CollationBin if any*/
+         }
+-        else if (uprv_strcmp(subtag, "Sequence") == 0)
++        else if (uprv_strcmp(subtag.data(), "Sequence") == 0)
+         {
+ #if UCONFIG_NO_COLLATION || UCONFIG_NO_FILE_IO
+             warning(line, "Not building collation elements because of UCONFIG_NO_COLLATION and/or UCONFIG_NO_FILE_IO, see uconfig.h");
+@@ -1034,7 +1035,7 @@ parseCollationElements(ParseState* state, char *tag, uint32_t startline, UBool n
+     struct UString    *tokenValue;
+     struct UString     comment;
+     enum   ETokenType  token;
+-    char               subtag[1024], typeKeyword[1024];
++    CharString         subtag, typeKeyword;
+     uint32_t           line;
+ 
+     result = table_open(state->bundle, tag, NULL, status);
+@@ -1076,7 +1077,8 @@ parseCollationElements(ParseState* state, char *tag, uint32_t startline, UBool n
+                 return NULL;
+             }
+ 
+-            u_UCharsToChars(tokenValue->fChars, subtag, u_strlen(tokenValue->fChars) + 1);
++            subtag.clear();
++            subtag.appendInvariantChars(tokenValue->fChars, u_strlen(tokenValue->fChars), *status);
+ 
+             if (U_FAILURE(*status))
+             {
+@@ -1084,9 +1086,9 @@ parseCollationElements(ParseState* state, char *tag, uint32_t startline, UBool n
+                 return NULL;
+             }
+ 
+-            if (uprv_strcmp(subtag, "default") == 0)
++            if (uprv_strcmp(subtag.data(), "default") == 0)
+             {
+-                member = parseResource(state, subtag, NULL, status);
++                member = parseResource(state, subtag.data(), NULL, status);
+ 
+                 if (U_FAILURE(*status))
+                 {
+@@ -1104,17 +1106,24 @@ parseCollationElements(ParseState* state, char *tag, uint32_t startline, UBool n
+                 /* then, we cannot handle aliases */
+                 if(token == TOK_OPEN_BRACE) {
+                     token = getToken(state, &tokenValue, &comment, &line, status);
+-                    collationRes = table_open(state->bundle, subtag, NULL, status);
++                    collationRes = table_open(state->bundle, subtag.data(), NULL, status);
+                     collationRes = addCollation(state, collationRes, startline, status); /* need to parse the collation data regardless */
+-                    if (gIncludeUnihanColl || uprv_strcmp(subtag, "unihan") != 0) {
++                    if (gIncludeUnihanColl || uprv_strcmp(subtag.data(), "unihan") != 0) {
+                         table_add(result, collationRes, startline, status);
+                     }
+                 } else if(token == TOK_COLON) { /* right now, we'll just try to see if we have aliases */
+                     /* we could have a table too */
+                     token = peekToken(state, 1, &tokenValue, &line, &comment, status);
+-                    u_UCharsToChars(tokenValue->fChars, typeKeyword, u_strlen(tokenValue->fChars) + 1);
+-                    if(uprv_strcmp(typeKeyword, "alias") == 0) {
+-                        member = parseResource(state, subtag, NULL, status);
++                    typeKeyword.clear();
++                    typeKeyword.appendInvariantChars(tokenValue->fChars, u_strlen(tokenValue->fChars), *status);
++                    if (U_FAILURE(*status))
++                    {
++                        res_close(result);
++                        return nullptr;
++                    }
++
++                    if(uprv_strcmp(typeKeyword.data(), "alias") == 0) {
++                        member = parseResource(state, subtag.data(), NULL, status);
+                         if (U_FAILURE(*status))
+                         {
+                             res_close(result);
+@@ -1156,7 +1165,7 @@ realParseTable(ParseState* state, struct SResource *table, char *tag, uint32_t s
+     struct UString    *tokenValue=NULL;
+     struct UString    comment;
+     enum   ETokenType token;
+-    char              subtag[1024];
++    CharString        subtag;
+     uint32_t          line;
+     UBool             readToken = FALSE;
+ 
+@@ -1195,7 +1204,8 @@ realParseTable(ParseState* state, struct SResource *table, char *tag, uint32_t s
+         }
+ 
+         if(uprv_isInvariantUString(tokenValue->fChars, -1)) {
+-            u_UCharsToChars(tokenValue->fChars, subtag, u_strlen(tokenValue->fChars) + 1);
++            subtag.clear();
++            subtag.appendInvariantChars(tokenValue->fChars, u_strlen(tokenValue->fChars), *status);
+         } else {
+             *status = U_INVALID_FORMAT_ERROR;
+             error(line, "invariant characters required for table keys");
+@@ -1208,7 +1218,7 @@ realParseTable(ParseState* state, struct SResource *table, char *tag, uint32_t s
+             return NULL;
+         }
+ 
+-        member = parseResource(state, subtag, &comment, status);
++        member = parseResource(state, subtag.data(), &comment, status);
+ 
+         if (member == NULL || U_FAILURE(*status))
+         {
+-- 
+2.30.2
+

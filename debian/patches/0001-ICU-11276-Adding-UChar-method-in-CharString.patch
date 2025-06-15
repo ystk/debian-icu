@@ -1,0 +1,61 @@
+From 52a197bf5db97b6ea511f6867634b6cfbb7d25f7 Mon Sep 17 00:00:00 2001
+From: Shane Carr <shane@unicode.org>
+Date: Fri, 14 Sep 2018 00:51:36 -0700
+Subject: ICU-11276 Adding UChar* method in CharString.
+
+---
+ source/common/charstr.cpp | 18 ++++++++++++++++--
+ source/common/charstr.h   |  1 +
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/source/common/charstr.cpp b/source/common/charstr.cpp
+index 76723d9790c..596e95e2401 100644
+--- a/source/common/charstr.cpp
++++ b/source/common/charstr.cpp
+@@ -16,6 +16,7 @@
+ #include "charstr.h"
+ #include "cmemory.h"
+ #include "cstring.h"
++#include "uinvchar.h"
+ 
+ U_NAMESPACE_BEGIN
+ 
+@@ -101,8 +102,21 @@ char *CharString::getAppendBuffer(int32_t minCapacity,
+ }
+ 
+ CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
+-    if(ensureCapacity(len+s.length()+1, 0, errorCode)) {
+-        len+=s.extract(0, 0x7fffffff, buffer.getAlias()+len, buffer.getCapacity()-len, US_INV);
++    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
++}
++
++CharString &CharString::appendInvariantChars(const UChar* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
++    if(U_FAILURE(errorCode)) {
++        return *this;
++    }
++    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
++        errorCode = U_INVARIANT_CONVERSION_ERROR;
++        return *this;
++    }
++    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
++        u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
++        len += ucharsLen;
++        buffer[len] = 0;
+     }
+     return *this;
+ }
+diff --git a/source/common/charstr.h b/source/common/charstr.h
+index 4b86c835f9a..67ae295286e 100644
+--- a/source/common/charstr.h
++++ b/source/common/charstr.h
+@@ -106,6 +106,7 @@ public:
+                           UErrorCode &errorCode);
+ 
+     CharString &appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode);
++    CharString &appendInvariantChars(const UChar* uchars, int32_t ucharsLen, UErrorCode& errorCode);
+ 
+     /**
+      * Appends a filename/path part, e.g., a directory name.
+-- 
+2.30.2
+
